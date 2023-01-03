@@ -4,6 +4,7 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 
@@ -14,6 +15,12 @@ export class Message {
 
   @Column({ name: 'text', type: 'text' })
   text: string;
+
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
+  createdAt: number;
+
+  @Column({ name: 'is_read', type: 'boolean', default: false })
+  isRead: boolean;
 
   @ManyToOne((type) => User, (user) => user.senderMessages)
   @JoinColumn([{ referencedColumnName: 'id' }])

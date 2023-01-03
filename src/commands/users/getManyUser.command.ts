@@ -10,7 +10,7 @@ export class GetManyUserCommand {
     private userRepository: Repository<User>,
   ) {}
 
-  public async getManyUserById(ids: string[]): Promise<User[]> {
-    return this.userRepository.find({ where: { id: In(ids) } });
+  public async getUserById(id: string): Promise<User> {
+    return this.userRepository.findOne({ where: { id } });
   }
 }

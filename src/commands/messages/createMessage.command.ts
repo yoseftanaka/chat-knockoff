@@ -15,13 +15,13 @@ export class CreateMessageCommand {
   ) {}
 
   public async createMessage(body: CreateMessageRequest): Promise<void> {
-    const users: User[] = await this.getManyUserCommand.getManyUserById([
+    const sender: User = await this.getManyUserCommand.getUserById(
       body.senderId,
-      body.recipientId,
-    ]);
+    );
 
-    const sender = users[0];
-    const receiver = users[1];
+    const receiver: User = await this.getManyUserCommand.getUserById(
+      body.recipientId,
+    );
 
     await this.messageRepository.save({
       text: body.text,
