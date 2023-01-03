@@ -1,6 +1,6 @@
 import {
-  IsAlphanumeric,
   IsNotEmpty,
+  IsString,
   MinLength,
   ValidationArguments,
 } from 'class-validator';
@@ -13,7 +13,7 @@ export class CreateMessageRequest {
   recipientId: string;
 
   @IsNotEmpty()
-  @IsAlphanumeric()
+  @IsString()
   @MinLength(1, {
     message: (args: ValidationArguments) => {
       if (args.value.length < 1) {
