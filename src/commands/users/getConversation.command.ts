@@ -8,13 +8,9 @@ import { User } from '../../entities/user.entity';
 @Injectable()
 export class GetConversationCommand {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
     @InjectRepository(Message)
     private messageRepository: Repository<Message>,
   ) {}
-
-  // private entityManager = getManager();
 
   public async listInvolvedConversation(
     viewerId: string,

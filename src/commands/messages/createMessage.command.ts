@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Message } from '../../entities/message.entity';
 import { Repository } from 'typeorm';
 import { CreateMessageRequest } from '../../dtos/createMessage.dto';
-import { GetManyUserCommand } from '../users/getManyUser.command';
+import { GetUserCommand } from '../users/getUser.command';
 import { User } from '../../entities/user.entity';
 
 @Injectable()
@@ -11,15 +11,13 @@ export class CreateMessageCommand {
   constructor(
     @InjectRepository(Message)
     private messageRepository: Repository<Message>,
-    private getManyUserCommand: GetManyUserCommand,
+    private getUserCommand: GetUserCommand,
   ) {}
 
   public async createMessage(body: CreateMessageRequest): Promise<void> {
-    const sender: User = await this.getManyUserCommand.getUserById(
-      body.senderId,
-    );
+    const sender: User = await this.getUserCommand.getUserById(body.senderId);
 
-    const receiver: User = await this.getManyUserCommand.getUserById(
+    const receiver: User = await this.getUserCommand.getUserById(
       body.recipientId,
     );
 

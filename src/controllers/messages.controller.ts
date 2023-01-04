@@ -1,11 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { Post, Body } from '@nestjs/common';
 import { CreateMessageCommand } from '../commands/messages/createMessage.command';
 import { GetMessageCommand } from '../commands/messages/getMessage.command';
 import { CreateMessageRequest } from '../dtos/createMessage.dto';
 import { GetMessageRequest, GetMessageResponse } from '../dtos/getMessage.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @Controller('messages')
+@UseGuards(JwtAuthGuard)
 export class MessageController {
   constructor(
     private createMessageCommand: CreateMessageCommand,

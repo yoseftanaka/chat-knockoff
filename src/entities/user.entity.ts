@@ -12,6 +12,9 @@ export class User {
   @Column({ name: 'username', unique: true })
   username: string;
 
+  @Column({ name: 'password' })
+  password: string;
+
   @OneToMany((type) => Message, (message) => message.sender)
   senderMessages: Message[];
 
