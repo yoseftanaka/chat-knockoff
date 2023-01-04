@@ -1,73 +1,142 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
+# Assumptions
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+- This project assumes that there is no group chat
+- "Conversation" assumes the meaning of the interaction between 2 users
+- User story 2 assumes similar to user story 1 (only the receiver and sender swap role) hence there is no extra API
+- "Messages" assumes the meaning of the bubble chat
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Prerequisites
 
-## Description
+- User should have already installed and ready to use mysql
+- User should have already installed and ready to use npm
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# Installation Guide
 
-## Installation
+- install pm2
+  ```
+  npm install pm2@latest -g
+  ```
+- enter the project folder and let npm install dependencies
+  ```
+  npm i
+  ```
+- build the project
+  ```
+  npm run build
+  ```
+- run project using pm2 (application name can be anything)
+  ```
+  pm2 start dist/main.js --name <application_name>
+  ```
+- server should run on localhost:3000
 
-```bash
-$ npm install
-```
+# API Contract
 
-## Running the app
+- ## Login
 
-```bash
-# development
-$ npm run start
+  endpoint: /users/login\
+  method: POST\
+  body:
 
-# watch mode
-$ npm run start:dev
+  ```
+  {
+    "username": "string",
+    "password": "string"
+  }
+  ```
 
-# production mode
-$ npm run start:prod
-```
+  response:
 
-## Test
+  ```
+  {
+    "access_token": "string"
+  }
+  ```
 
-```bash
-# unit tests
-$ npm run test
+- ## Register / Signup
 
-# e2e tests
-$ npm run test:e2e
+  endpoint: /users/register\
+  method: POST\
+  body:
 
-# test coverage
-$ npm run test:cov
-```
+  ```
+  {
+    "name": "string",
+    "username": "string",
+    "password": "string"
+  }
+  ```
 
-## Support
+- ## List Conversation
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+  endpoint: /users/list/involved-conversation\
+  method: GET\
+  query parameter:
 
-## Stay in touch
+  - viewerId: string
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+  header:
 
-## License
+  - Authorization: Bearer {{jwt token}}
 
-Nest is [MIT licensed](LICENSE).
+  response:
+
+  ```
+  {
+    "data": [
+        {
+            "text": "string",
+            "unreadMessages": "string number",
+            "name": "string"
+        }
+    ]
+  }
+  ```
+
+- ## Post Message
+
+  endpoint: /messages\
+  method: POST\
+  header:
+
+  - Authorization: Bearer {{jwt token}}\
+
+  body:
+
+  ```
+  {
+    "senderId": "string",
+    "recipientId": "string",
+    "text": "string"
+  }
+  ```
+
+- ## Get Messages
+
+  endpoint: /messages/list\
+  method: GET\
+
+  header:
+
+  - Authorization: Bearer {{jwt token}}
+
+  body:
+
+  ```
+  {
+    "searchedUserId": "string",
+    "viewerId": "string"
+  }
+  ```
+
+  response:
+
+  ```
+  {
+    "data": [
+        {
+            "text": "string"
+        }
+    ]
+  }
+  ```
