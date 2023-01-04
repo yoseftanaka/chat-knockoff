@@ -20,6 +20,7 @@
   ```
   npm i
   ```
+- create .env file with .env.example as example on the project root
 - build the project
   ```
   npm run build
